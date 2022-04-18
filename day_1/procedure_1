@@ -1,0 +1,32 @@
+-- Explore data in payment table 
+select *
+from payment;
+
+-- stored procedure Example
+--simulate late fee charge 
+
+create or replace procedure latefee(
+	rental integer,
+	latefeeamount decimal
+)
+language plpgsql
+as  $$
+begin 
+	-- add late fee amount to customer payment
+	update payment
+	set amount = amount + latefeeamount
+	where rental_id = rental;
+	
+	--commit the above statement
+	commit;
+end;
+$$
+
+-- Calling a stored procedure
+call latefee(1520,2.02)
+
+-- view changes for customer 341
+
+select *
+from payment
+where customer_id = 341;
